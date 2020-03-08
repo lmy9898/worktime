@@ -1,10 +1,20 @@
 import pandas as pd
-from datetime import timedelta,datetime
+from datetime import timedelta
+import argparse
+import os
 
-obj = "C:/Users/test/Desktop/나무발발이/이민영2월.xlsx"
-dst ="C:/Users/test/Desktop/나무발발이/이민영.csv"
+parser = argparse.ArgumentParser()
 
-df = pd.read_excel(obj)
+parser.add_argument('-d','--directory', required = False, default=os.getcwd(), help='exel file')
+parser.add_argument('-t','--target', required = True, help='exel file')
+parser.add_argument('-o','--output', required = True, help='output')
+
+
+args = parser.parse_args()
+
+target, output = args.directory + '/' + args.target, args.directory + '/' + args.output
+
+df = pd.read_excel(target)
 df = df[['발생시각','상태']]
 
 # 새벽 야근을 고려한 6시간 빼기
@@ -80,4 +90,4 @@ total = pd.DataFrame(my_dict)
 
 a = pd.concat([df,total], axis = 1,ignore_index=False)
 a
-a.to_csv(dst, mode='w', encoding='euckr')
+a.to_csv(output, mode='w', encoding='euckr')
